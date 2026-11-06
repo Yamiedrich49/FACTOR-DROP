@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#f6f7f1">
+<title>FACTOR DROP — さわって、割って、つなげる。</title>
+<style>
+
+:root{--bg:#f6f7f1;--ink:#17373a;--soft:#607a78;--quiet:#8ca49d;--cyan:#18a89c;--cyan-dark:#0d817d;--edge:#dce5df;--slate:#203e43;--slate2:#1a3339;--tile:#fffcf4;--size:16.66666667%;--step:11.1111111%;--pad:3px}
+*{box-sizing:border-box}html{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;-webkit-tap-highlight-color:transparent}body{margin:0;min-height:100dvh;overflow-x:hidden;color:var(--ink);background:radial-gradient(ellipse 85% 32% at 50% -7%,#dceee7 0%,transparent 95%),var(--bg)}button{font:inherit;cursor:pointer;-webkit-user-select:none;user-select:none;touch-action:manipulation}button:focus-visible{outline:3px solid #54bbb0;outline-offset:2px}button:disabled{opacity:.38;cursor:default}
+.app{max-width:450px;margin:auto;padding:15px 16px calc(18px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none}
+.top{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px;gap:8px}.brandline{display:flex;align-items:center;gap:8px}.brand-logo{height:32px;width:32px;border-radius:10px;background:#153e42;display:grid;place-items:center;color:#8ee0c9;font-weight:900;font-size:18px;box-shadow:0 2px 0 #102f34}.wordmark{margin:0 0 2px;font-size:9px;letter-spacing:.21em;font-weight:840;color:#7f9c94}.title{font-size:25px;letter-spacing:-.055em;line-height:1;font-weight:870;margin:0;white-space:nowrap}.title span{color:var(--cyan)}.subtitle{display:none}.header-tools{display:flex;gap:7px}.icon-btn{width:40px;height:40px;display:grid;place-items:center;background:#fffef9;border:1px solid #dce8e0;color:#4c7571;border-radius:13px;box-shadow:0 2px 0 #d8e5dc;transition:transform .12s,box-shadow .12s}.icon-btn:active{transform:translateY(2px);box-shadow:0 0 0 #d8e5dc}.icon-btn svg{height:18px;width:18px;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+.hud{display:grid;grid-template-columns:1.1fr 1fr .9fr;align-items:stretch;border:1px solid #e0e8df;background:rgba(255,255,251,.81);border-radius:17px;box-shadow:0 2px 0 #e0eae22b;margin-bottom:9px}.hud-item{padding:10px 12px 9px;position:relative}.hud-item:not(:last-child):after{content:'';position:absolute;right:0;top:15px;bottom:15px;width:1px;background:#e3ebe4}.hud-item.primary{background:linear-gradient(120deg,#e6f6eb,#eef9ef);border-radius:16px 0 0 16px}.hud-label{font-size:9px;color:#829991;letter-spacing:.11em;font-weight:880}.hud-number{margin-top:2px;font-size:24px;line-height:1.1;letter-spacing:-.045em;font-variant-numeric:tabular-nums;font-weight:870}.hud-number small{font-size:11px;color:#8da097;margin-left:3px;font-weight:800}.hud-number.bump{animation:odometer .25s cubic-bezier(.18,.9,.4,1.2)}@keyframes odometer{0%{transform:translateY(4px);opacity:.7}75%{transform:translateY(-1px)}100%{transform:translateY(0);opacity:1}}
+.hintline{display:flex;align-items:center;gap:9px;margin:2px 2px 8px;min-height:23px;color:#5b7871;font-size:11.5px;font-weight:710;line-height:1.38}.hintline .seed{height:7px;width:7px;flex:none;border-radius:50%;background:#0ea79c;box-shadow:0 0 0 4px #e2f2e9}.hintline strong{color:#13887c}
+.game-board-frame{position:relative;padding:7px 7px 0;border-radius:23px;background:linear-gradient(146deg,#fffefa,#e8efe8);border:1px solid #d8e4d9;box-shadow:0 16px 35px #2c59430a,0 2px 0 #c9dbcf36}
+.board{position:relative;aspect-ratio:6/9;width:min(100%,350px,calc((100dvh - 335px)*.70));min-width:0;margin:auto;background:linear-gradient(145deg,#203e45,#192f35 95%);border:2px solid #1c373c;border-radius:16px;box-shadow:inset 0 2px 9px #0a1e2873,0 2px 1px #ffffffb3;overflow:hidden;touch-action:none;cursor:crosshair;isolation:isolate}.slots{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(9,1fr);pointer-events:none}.slot{margin:3px;border-radius:9px;border:1px solid #64837d1f;background:linear-gradient(145deg,#3a58563d,#53756c16);box-shadow:inset 0 2px 4px #00161a2e,inset 0 0 0 1px #ffffff04}.lane-hilight{position:absolute;width:var(--size);top:0;bottom:0;background:linear-gradient(180deg,#68dfbd19,#51d1ac09 78%,#7cddbb15);border-left:1px solid #71d7bd2a;border-right:1px solid #71d7bd2a;z-index:1;pointer-events:none;transition:transform 95ms cubic-bezier(.2,.72,.3,1)}.place-marker{position:absolute;top:0;left:0;width:var(--size);height:var(--step);padding:var(--pad);z-index:3;pointer-events:none;transition:left .1s ease,top .12s ease,opacity .12s}.place-inner{width:100%;height:100%;border:1.5px solid #70e0ba;border-radius:10px;box-shadow:0 0 0 2px #46bd9742,inset 0 0 11px #5bcc9b22;background:#6adeaa22;opacity:.88;animation:breathe 1.8s ease-in-out infinite alternate}@keyframes breathe{to{opacity:.52;box-shadow:0 0 0 1px #46bd972a,inset 0 0 5px #5bcc9b15}}
+.tiles{position:absolute;inset:0;z-index:2;pointer-events:none}.tile-wrap{position:absolute;width:var(--size);height:var(--step);padding:var(--pad);pointer-events:none;will-change:top;transition:top .22s cubic-bezier(.23,.7,.35,1)}.tile{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;width:100%;height:100%;border-radius:10px;border:1px solid #ecede2;background:linear-gradient(150deg,#fffefb,#fffaf1 49%,#e8eee6);box-shadow:0 3px 0 #9aaea5,0 5px 9px #0a222744,inset 0 1px 0 #fff;overflow:hidden}.tile:before{content:'';position:absolute;top:0;left:9px;right:9px;height:1.3px;background:#fff}.tile-number{font-size:clamp(18px,5.5vw,28px);font-weight:860;color:#1b4043;letter-spacing:-.055em;font-variant-numeric:tabular-nums;line-height:1.01}.tile-dots{display:flex;gap:3px;height:5px;align-items:center;justify-content:center}.dot{display:inline-block;width:4.5px;height:4.5px;border-radius:50%;background:var(--d);box-shadow:0 0 0 .5px #fff5}.tile-wrap.flare .tile{animation:reform .28s cubic-bezier(.2,.75,.35,1.25);background:linear-gradient(148deg,#fffef8,#e2f6ec)}.tile-wrap.appear .tile{animation:tilein .22s cubic-bezier(.2,.8,.3,1.2)}@keyframes reform{0%{transform:scale(.79);filter:brightness(1.24)}72%{transform:scale(1.055)}100%{transform:scale(1)}}@keyframes tilein{0%{opacity:.55;transform:scale(.82) translateY(-5px)}80%{opacity:1;transform:scale(1.045)}100%{transform:scale(1)}}
+.active-block{position:absolute;z-index:5;width:var(--size);height:var(--step);padding:var(--pad);pointer-events:none;left:0;top:0;will-change:transform,left;transition:left .105s cubic-bezier(.16,.8,.3,1),transform .12s ease-out}.active-block .tile{background:linear-gradient(152deg,#fffefa,#dcf9ed);border-color:#b0e8d1;box-shadow:0 3px 0 #7ab7a8,0 7px 15px #001d2748,inset 0 1px 0 white}.active-block.drop .tile{box-shadow:0 2px 0 #7ab7a8,0 4px 9px #001d2738}
+.spark{position:absolute;z-index:12;pointer-events:none;font-size:18px;font-weight:890;color:#edfff6;text-shadow:0 2px 7px #001c23,0 0 15px #5edcbd;transform:translate(-50%,-50%);white-space:nowrap;animation:sparkup .7s both}@keyframes sparkup{0%{opacity:0;transform:translate(-50%,4px) scale(.85)}28%{opacity:1;transform:translate(-50%,-10px) scale(1.05)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-38px)}}.burst-particle{position:absolute;z-index:10;pointer-events:none;height:4px;width:4px;border-radius:50%;background:var(--dust);box-shadow:0 0 4px var(--dust);animation:dust .43s ease-out both}@keyframes dust{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.22)}}
+.board-bottom{display:flex;align-items:center;justify-content:space-between;padding:8px 5px 9px;gap:8px;color:#779089;font-size:10px;font-weight:750}.board-bottom b{color:#158d81}.board-bottom span{white-space:nowrap}
+.learning{display:flex;align-items:center;gap:8px;margin:7px 0 0;padding:7px 11px;min-height:37px;background:#fffffbb0;border:1px solid #e1e8df;border-radius:12px;transition:background .2s}.learning-icon{height:22px;width:22px;display:grid;place-items:center;flex:none;color:#118b7f;background:#e2f4e9;border-radius:7px;font-weight:900;font-size:15px}.learning-copy{font-size:11.4px;font-weight:700;color:#5a7870;line-height:1.42}.learning-copy strong{color:#1a5653;font-weight:890}.learning.active{background:#e7f7ec;border-color:#bfdfd0}
+.queue{display:flex;align-items:center;gap:8px;min-height:49px;margin:8px 2px}.queue-label{font-size:10px;letter-spacing:.1em;font-weight:860;color:#79958a;min-width:38px}.next-piece{width:46px;height:46px;flex:none;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;border-radius:12px;background:linear-gradient(145deg,#fffef8,#e4f5eb);border:1px solid #afd9c9;box-shadow:0 2px 0 #95c4b4}.next-piece b{font-size:24px;line-height:1;color:#194744;letter-spacing:-.04em}.peek{display:flex;align-items:center;gap:7px;flex:1;margin-left:4px}.peek-box{width:36px;height:38px;display:grid;place-items:center;background:#fdfdf7;border:1px solid #e2e9e1;border-radius:10px;font-size:15px;color:#829991;font-weight:820;font-variant-numeric:tabular-nums}.queue-hint{font-size:9px;letter-spacing:.04em;font-weight:800;color:#90a59e;margin-left:auto}
+.input-row{display:grid;grid-template-columns:57px 1fr 57px;gap:9px}.move-btn,.drop-btn{min-height:58px;border-radius:16px;font-weight:900;transition:transform .11s,box-shadow .11s}.move-btn{font-size:22px;background:#fffef9;border:1px solid #d5e6da;color:#315e59;box-shadow:0 3px 0 #d6e5da}.drop-btn{font-size:17px;color:white;letter-spacing:.09em;background:linear-gradient(165deg,#27bbaa,#0e948b);border:1px solid #098d80;box-shadow:0 4px 0 #08776e,0 7px 15px #0a78652d;position:relative}.drop-btn:before{content:'';position:absolute;inset:1px 12px auto;height:1px;background:#bafbe890}.move-btn:active,.drop-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #b8cfc1}.drop-btn:active{background:#0c9c92}.secondary{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:8px}.tiny-btn{border:0;background:transparent;color:#728e84;font-size:11.5px;font-weight:790;min-height:34px;padding:5px 6px;border-radius:9px}.tiny-btn:active{background:#e6f0e9}.mode-pill{font-size:10.5px;border:1px solid #dce9dd;padding:8px 7px;border-radius:12px;color:#64867d;background:#fffefa;font-weight:800;white-space:nowrap}.mode-pill strong{color:#0a9787}.footer{font-size:8px;text-align:center;color:#a1b3a9;margin-top:10px;letter-spacing:.15em;font-weight:850}
+.sheet{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#132d31a8;backdrop-filter:blur(7px);padding:15px}.sheet.open{display:flex}.dialog{width:min(100%,370px);border-radius:25px;background:#fffefa;border:1px solid #e1e9e1;box-shadow:0 20px 60px #0b2d324d;padding:25px 20px 19px;text-align:center}.dialog-icon{height:56px;width:56px;display:grid;place-items:center;margin:0 auto 13px;border-radius:17px;background:#def5e8;color:#119a8d;font-weight:900;font-size:26px}.dialog h2{font-size:22px;font-weight:860;margin:0 0 8px}.dialog p{font-size:13px;line-height:1.8;color:#5c7c73;margin:0 0 15px}.dialog-actions{display:flex;gap:9px}.dialog button{min-height:50px;border-radius:13px;font-size:13px;font-weight:850;flex:1;border:1px solid #d7e7df;background:#f1f6ef;color:#477169}.dialog button.main{background:#119b8e;border-color:#119b8e;color:white}.rule-example{display:flex;align-items:center;justify-content:center;gap:10px;margin:13px 0}.rule-tile{width:50px;height:49px;display:grid;place-items:center;border:1px solid #d3e0d6;border-radius:11px;background:linear-gradient(145deg,#fff,#edf5ed);box-shadow:0 2px 0 #c2d8c7;font-size:22px;font-weight:860}.rule-arrow{color:#799d91;font-size:12px}.prime-legend{display:flex;justify-content:center;gap:12px;margin:8px 0 15px}.legend-token{display:flex;gap:4px;align-items:center;color:#647f74;font-size:12px;font-weight:820}
+@media(max-width:360px){.app{padding-left:10px;padding-right:10px}.title{font-size:23px}.hud-item{padding:8px 9px}.hud-number{font-size:22px}.peek-box{width:32px}.input-row{grid-template-columns:52px 1fr 52px}.board{width:min(100%,350px,calc((100dvh - 320px)*.70))}}
+@media(max-height:790px){.app{padding-top:9px;padding-bottom:8px}.top{margin-bottom:7px}.hud-item{padding-top:7px;padding-bottom:7px}.hud-number{font-size:21px}.hintline{margin-bottom:6px}.queue{margin-top:6px;margin-bottom:6px}.board{width:min(100%,350px,calc((100dvh - 309px)*.68))}.learning{margin-top:5px}.input-row .move-btn,.input-row .drop-btn{min-height:50px}.secondary{margin-top:4px}.footer{display:none}}
+@media(max-height:690px){.board{width:min(100%,340px,calc((100dvh - 278px)*.64))}.hintline{font-size:10.5px}.queue{min-height:39px}.next-piece{width:40px;height:40px}.peek-box{height:32px}.learning{min-height:32px;padding-top:4px;padding-bottom:4px}.input-row .move-btn,.input-row .drop-btn{min-height:47px}}
+
+.learning.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;clip-path:inset(50%)!important;overflow:hidden!important;white-space:nowrap!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important}
+.footer{display:none}
+.board{width:min(100%,350px,max(235px,calc((100dvh - 444px)*.75)))}
+@media(max-height:790px){.board{width:min(100%,350px,max(235px,calc((100dvh - 444px)*.75)))}}
+@media(max-height:690px){.board{width:min(100%,350px,max(230px,calc((100dvh - 444px)*.75)))}}
+
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top">
+ <div class="brandline"><div class="brand-logo">÷</div><div><div class="wordmark">THE BEAUTY OF NUMBERS</div><h1 class="title">FACTOR DROP<span>.</span></h1></div></div>
+ <div class="header-tools">
+ <button class="icon-btn" id="soundBtn" aria-label="音を切り替え" title="音を切り替え"><svg viewBox="0 0 24 24" id="soundSvg"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+ <button class="icon-btn" id="helpBtn" aria-label="あそびかた" title="あそびかた"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.9 9a2.3 2.3 0 1 1 3.7 1.8c-1 .8-1.6 1.2-1.6 2.4"/><circle cx="12" cy="17.3" r=".6" fill="currentColor" stroke="none"/></svg></button>
+ </div>
+</header>
+<section class="hud" aria-live="polite">
+ <div class="hud-item primary"><div class="hud-label">SCORE</div><div class="hud-number" id="score">0</div></div>
+ <div class="hud-item"><div class="hud-label">BEST</div><div class="hud-number" id="best">0</div></div>
+ <div class="hud-item"><div class="hud-label">SURVIVED</div><div class="hud-number"><span id="moves">0</span><small>手</small></div></div>
+</section>
+<div class="hintline" id="coach"><span class="seed"></span><span id="coachCopy">まずは <strong>7</strong> を <strong>14</strong> に落としてみよう。</span></div>
+<div class="game-board-frame">
+ <div class="board" id="board" role="application" aria-label="6列9段の数字ブロック。列をタップして落とす。">
+   <div class="slots" id="slots" aria-hidden="true"></div>
+   <div class="lane-hilight" id="lane" aria-hidden="true"></div>
+   <div class="place-marker" id="marker" aria-hidden="true"><div class="place-inner"></div></div>
+   <div class="tiles" id="tiles" aria-hidden="true"></div>
+   <div class="active-block" id="active" aria-hidden="true"></div>
+ </div>
+ <div class="board-bottom"><span>盤面をなぞって、指を離すと落下</span><b id="modeState">じっくりモード</b></div>
+</div>
+<div class="learning visually-hidden" id="learning" aria-live="polite"><div class="learning-icon">÷</div><div class="learning-copy" id="learnText">1以外の公約数があれば、<strong>両方を割る</strong>。1になった数字だけ消える。</div></div>
+<div class="queue"><div class="queue-label">NEXT</div><div class="next-piece" id="nextPiece"><b id="nextNum">7</b><span class="tile-dots" id="nextDots"></span></div><div class="peek" id="peek"></div><div class="queue-hint">COMING UP</div></div>
+<div class="input-row"><button class="move-btn" id="leftBtn" aria-label="左へ">←</button><button class="drop-btn" id="dropBtn">落とす　↓</button><button class="move-btn" id="rightBtn" aria-label="右へ">→</button></div>
+<div class="secondary"><button class="tiny-btn" id="undoBtn">↶ 1手もどす</button><button class="mode-pill" id="modeBtn">◷ <strong>じっくり</strong> / 自動落下</button><button class="tiny-btn" id="restartBtn">↻ やりなおし</button></div>
+<div class="footer">MADE TO FEEL AS GOOD AS IT THINKS</div>
+</main>
+<div class="sheet" id="sheet" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog"><div class="dialog-icon" id="dialogIcon">÷</div><h2 id="dialogTitle">あそびかた</h2><div id="dialogText"><p>1以外の公約数を持つ数字をぶつけると、両方が約分されます。</p></div><div class="dialog-actions"><button id="sheetAlt">閉じる</button><button class="main" id="sheetMain">あそぶ</button></div></div></div>
+<script>
+(()=>{'use strict';
+const ROWS=9,COLS=6, $=id=>document.getElementById(id),wait=ms=>new Promise(r=>setTimeout(r,ms));
+const board=$('board'),tilesEl=$('tiles'),activeEl=$('active'),marker=$('marker'),lane=$('lane'),coach=$('coach'),learning=$('learning'),sheet=$('sheet');
+const colors={2:'#1ba9a1',3:'#edab69',5:'#9881c6',7:'#d4b657'};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const delay=ms=>reduce?1:ms;
+const seedCols=()=>[[15],[10],[14],[21],[12],[25]];
+const seedQueue=[7,3,5,2,6,14,7,10,3];
+const pool=[2,2,3,3,5,5,6,6,7,7,9,10,12,14,15,18,20,21,25,27,28,30,35,42,45,49];
+let cols=seedCols(),queue=[],activeCol=2,turns=0,score=0,best=0,auto=false,autoRow=0,lastFrame=0,paused=false,busy=false,ended=false,rng=0x3e41c9a,history=[],soundOn=true,ctx=null,noiseBuf=null,modeGeneration=0;
+try{best=Number(localStorage.getItem('factor-drop-best-v1'))||0; soundOn=localStorage.getItem('factor-drop-sound-v1')!=='off';}catch(e){}
+const gcd=(a,b)=>{while(b){[a,b]=[b,a%b]}return a};
+const primes=n=>{const out=[];for(let p=2;p*p<=n;p++){while(n%p===0){out.push(p);n/=p;}}if(n>1)out.push(n);return out;};
+const dots=n=>primes(n).map(p=>`<i class="dot" style="--d:${colors[p]||'#90a6a1'}"></i>`).join('');
+const numTile=(n)=>`<div class="tile"><div class="tile-number">${n}</div><div class="tile-dots">${dots(n)}</div></div>`;
+function rand(){rng=(Math.imul(1664525,rng)+1013904223)>>>0;return rng/4294967296;}
+function pick(){let tops=cols.map(x=>x.at(-1)).filter(Boolean),matches=pool.filter(n=>tops.some(top=>gcd(top,n)>1));let list=(tops.length&&rand()<.78&&matches.length)?matches:pool;return list[Math.floor(rand()*list.length)];}
+function ensureQueue(){while(queue.length<4)queue.push(pick());}
+function saveBest(){if(score>best){best=score;try{localStorage.setItem('factor-drop-best-v1',best)}catch(e){}}}
+function audio(){if(!soundOn)return null;try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx}catch(e){return null}}
+function tone(freq,time=.07,gain=.034,type='sine',offset=0){const c=audio();if(!c)return;const t=c.currentTime+offset,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(freq*.90,t+time);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+time);o.connect(g).connect(c.destination);o.start(t);o.stop(t+time+.01)}
+let lastTickTime=0;
+function clickSound(strength=.6){const c=audio();if(!c)return;const t=c.currentTime,len=.022,n=Math.ceil(c.sampleRate*len),b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,5.8);const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.value=1650;f.Q.value=.95;g.gain.value=.085*strength;s.connect(f).connect(g).connect(c.destination);s.start(t);s.stop(t+len);tone(240,.037,.007*strength,'triangle')}
+function tick(){const now=performance.now();if(now-lastTickTime<43)return;lastTickTime=now;clickSound(.30)}
+function dropSound(){clickSound(.92);tone(147,.080,.020,'triangle');tone(294,.035,.006,'sine',.005)}
+function divideSound(k=1){clickSound(.59);const notes=[392,523.25,659.25,783.99,880];const freq=notes[Math.min(k-1,4)];tone(freq,.115,.029,'sine',.01);tone(freq*2,.051,.006,'sine',.022)}
+function finishSound(){[523.25,659.25,783.99].forEach((n,i)=>tone(n,.20,.018,'sine',i*.065))}
+function tileKey(c,index){return `${c}-${index}`}
+let previousShown=new Map(),flashIds=new Set(),lastScoreDisplayed=null;
+let visibleTileNodes=new Map();
+function renderBoard(){const next=new Map(),newValues=new Map();
+ for(let c=0;c<COLS;c++)for(let i=0;i<cols[c].length;i++){
+  const row=ROWS-1-i,n=cols[c][i],key=tileKey(c,i),prev=previousShown.get(key);
+  let node=visibleTileNodes.get(key);
+  if(!node){node=document.createElement('div');node.className='tile-wrap appear';node.style.left=`${c/6*100}%`;node.style.top=`${row/9*100}%`;node.innerHTML=numTile(n);tilesEl.appendChild(node)}
+  else {node.style.top=`${row/9*100}%`;if(prev!==n){node.innerHTML=numTile(n);node.classList.remove('flare','appear');void node.offsetWidth;node.classList.add('flare')}else if(flashIds.has(key)){node.classList.remove('flare','appear');void node.offsetWidth;node.classList.add('flare')}else{node.classList.remove('flare','appear')}}
+  next.set(key,node);newValues.set(key,n);
+ }
+ for(let [key,node] of visibleTileNodes){if(!next.has(key))node.remove()}
+ visibleTileNodes=next;previousShown=newValues;flashIds.clear();
+}
+function moveActive(immediate=false){const n=queue[0]||7;if(activeEl.dataset.num!==String(n)){activeEl.innerHTML=numTile(n);activeEl.dataset.num=String(n)}activeEl.style.left=`${activeCol/6*100}%`;activeEl.style.top='0';const y=(auto?autoRow:-.02);activeEl.style.transform=`translateY(${y*100}%)`;activeEl.style.opacity=busy||ended?'0':'1';activeEl.classList.toggle('drop',auto);lane.style.transform=`translateX(${activeCol*100}%)`;const height=cols[activeCol].length;let target=ROWS-1-height;if(target<0)target=0;marker.style.left=`${activeCol/6*100}%`;marker.style.top=`${target/9*100}%`;marker.style.opacity=(height>=ROWS||busy||ended)?'0':'.83';if(immediate){lane.style.transition='none';marker.style.transition='none';requestAnimationFrame(()=>{lane.style.transition='';marker.style.transition=''})}}
+function renderInfo(){saveBest();if(lastScoreDisplayed!==null&&score!==lastScoreDisplayed){const el=$('score');el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')}lastScoreDisplayed=score;$('score').textContent=String(score).padStart(3,'0');$('best').textContent=String(best).padStart(3,'0');$('moves').textContent=turns;$('nextNum').textContent=queue[0];$('nextDots').innerHTML=dots(queue[0]);$('peek').innerHTML=queue.slice(1,4).map(n=>`<span class="peek-box">${n}</span>`).join('');$('undoBtn').disabled=busy||!history.length;$('modeState').textContent=auto?'自動落下':'じっくりモード';$('modeBtn').innerHTML=auto?'◷ じっくり / <strong>自動落下</strong>':'◷ <strong>じっくり</strong> / 自動落下';$('dropBtn').disabled=busy||ended;$('leftBtn').disabled=busy||ended;$('rightBtn').disabled=busy||ended;$('soundBtn').setAttribute('aria-pressed',String(soundOn));$('soundSvg').innerHTML=soundOn?'<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>':'<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/>';moveActive()}
+function setCoach(html){$('coachCopy').innerHTML=html}
+function setLearn(html,highlight=false){$('learnText').innerHTML=html;learning.classList.toggle('active',highlight)}
+function flash(c,i){flashIds.add(tileKey(c,i))}
+function floatText(c,row,html){const e=document.createElement('div');e.className='spark';e.style.left=`${(c+.5)/6*100}%`;e.style.top=`${(row+.15)/9*100}%`;e.textContent=html;board.appendChild(e);setTimeout(()=>e.remove(),720)}
+function clone(){return {cols:cols.map(a=>a.slice()),queue:queue.slice(),turns,score,rng,activeCol,autoRow}}
+function reset(){board.querySelectorAll('.active-block.drop,.spark,.burst-particle').forEach(el=>{if(el!==activeEl)el.remove()});modeGeneration++;cols=seedCols();queue=seedQueue.slice();ensureQueue();turns=0;score=0;activeCol=2;autoRow=0;ended=false;busy=false;history=[];previousShown.clear();flashIds.clear();tilesEl.innerHTML='';visibleTileNodes.clear();setCoach('まずは <strong>7</strong> を <strong>14</strong> に落としてみよう。');setLearn('1以外の公約数があれば、<strong>両方を割る</strong>。1になった数字だけ消える。');renderBoard();renderInfo();closeSheet();}
+function restore(s){cols=s.cols.map(a=>a.slice());queue=s.queue.slice();turns=s.turns;score=s.score;rng=s.rng;activeCol=s.activeCol;autoRow=s.autoRow;ended=false;previousShown.clear();tilesEl.innerHTML='';visibleTileNodes.clear();setCoach('さあ、どの数字に落とす？');setLearn('約分すると数字が小さくなり、<strong>1だけが消える</strong>。');ensureQueue();renderBoard();renderInfo()}
+function factorDust(c,row,d){if(reduce)return;const prime=primes(d)[0]||2,color=colors[prime]||'#9bc4b3';const w=board.clientWidth,h=board.clientHeight;
+  const centerX=(c+.5)*w/COLS,centerY=(row+.6)*h/ROWS;
+  for(let i=0;i<6;i++){const a=(Math.PI*2/6)*i+(Math.PI/9),radius=12+(i%3)*6;const p=document.createElement('i');p.className='burst-particle';p.style.left=`${centerX}px`;p.style.top=`${centerY}px`;p.style.setProperty('--dust',i%3===0?'#fffaf0':color);p.style.setProperty('--dx',`${Math.cos(a)*radius}px`);p.style.setProperty('--dy',`${Math.sin(a)*radius-13}px`);board.appendChild(p);setTimeout(()=>p.remove(),510)}
+}
+function centerCol(c){return (c+.5)/6}
+function buildDropEl(n,c,startRow,targetRow){const e=document.createElement('div');e.className='active-block drop';e.innerHTML=numTile(n);e.style.left=`${c/6*100}%`;e.style.top='0';e.style.transition='none';e.style.transform=`translateY(${startRow*100}%)`;board.append(e);requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transition=`transform ${delay(Math.max(155,Math.min(620,(targetRow-startRow)*55+160)))}ms cubic-bezier(.19,.78,.26,1)`;e.style.transform=`translateY(${targetRow*100}%)`;}));return e;}
+async function dropAt(c){if(busy||ended||sheet.classList.contains('open'))return;if(c<0||c>=COLS)return;
+ const gen=modeGeneration;if(cols[c].length>=ROWS){setCoach('そこはもういっぱい。<strong>別の列</strong>を選ぼう。');clickSound(.22);return;}
+ busy=true;const n=queue[0],startRow=auto?autoRow:0,targetRow=ROWS-1-cols[c].length,travel=delay(Math.max(155,Math.min(620,(targetRow-startRow)*55+160)));
+ history.push(clone());if(history.length>30)history.shift();activeCol=c;activeEl.style.opacity='0';marker.style.opacity='0';const falling=buildDropEl(n,c,startRow,targetRow);clickSound(.34);await wait(travel+26);if(gen!==modeGeneration){falling.remove();return;}falling.remove();dropSound();
+ const a=cols[c],before=a.length? a.at(-1):null;let chain=0;let math=[];
+ if(before!==null&&gcd(before,n)>1){const d=gcd(before,n),qIncoming=n/d,qExisting=before/d;
+ chain++;math.push({incoming:n,existing:before,d,qi:qIncoming,qe:qExisting});a.pop();if(qExisting>1)a.push(qExisting);if(qIncoming>1)a.push(qIncoming);if(qExisting>1)flash(c,a.length-(qIncoming>1?2:1));if(qIncoming>1)flash(c,a.length-1);
+ floatText(c,targetRow,`÷ ${d}`);factorDust(c,targetRow,d);divideSound(chain);renderBoard();await wait(delay(320));if(gen!==modeGeneration)return;
+ // The newly exposed/changed top tile may now react with the tile directly below it.
+ for(let guard=0;guard<ROWS&&a.length>=2;guard++){
+  const top=a.at(-1),lower=a.at(-2),dd=gcd(top,lower);if(dd<=1)break;
+  chain++;const qt=top/dd,ql=lower/dd;math.push({incoming:top,existing:lower,d:dd,qi:qt,qe:ql});a.pop();a.pop();if(ql>1)a.push(ql);if(qt>1)a.push(qt);flash(c,a.length-1);floatText(c,ROWS-1-a.length,`÷ ${dd}`);factorDust(c,ROWS-1-a.length,dd);divideSound(chain);renderBoard();await wait(delay(295));if(gen!==modeGeneration)return;
+ }
+ }else{a.push(n);flash(c,a.length-1);renderBoard();await wait(delay(135));if(gen!==modeGeneration)return;}
+ turns++;let gained=chain?math.reduce((s,p,i)=>s+(p.d*8+((p.qi===1)?15:0)+((p.qe===1)?15:0))*(i+1),0):5;score+=gained;
+ if(math.length){const first=math[0],inTxt=first.qi===1?'1 → 消える':String(first.qi),exTxt=first.qe===1?'1 → 消える':String(first.qe);setLearn(`<strong>${first.incoming} ÷ ${first.d} → ${inTxt}</strong>　·　<strong>${first.existing} ÷ ${first.d} → ${exTxt}</strong>`,true);if(chain>1){setCoach(`<strong>${chain}連鎖！</strong> つながった！`);finishSound();}else setCoach(`<strong>${first.incoming} ÷ ${first.d} → ${first.qi===1?'消える':first.qi}</strong>　·　<strong>${first.existing} ÷ ${first.d} → ${first.qe===1?'消える':first.qe}</strong>`);}
+ else if(before!==null){setLearn(`<strong>${n}</strong> と <strong>${before}</strong> は共通因数なし。`,false);setCoach('次はどこに落とす？');}
+ else {setLearn(`${n} を置いた。数字をぶつけて、盤面を整理しよう。`,false);setCoach('次の数字を選んで落とそう。');}
+ queue.shift();ensureQueue();autoRow=0;busy=false;
+ if(cols.some(arr=>arr.length>=ROWS)){ended=true;setCoach('盤面がいっぱい！ ここまでよく遊んだね。');renderInfo();await wait(delay(500));if(gen!==modeGeneration)return;showGameOver();return;}
+ renderInfo();
+ }
+function setCol(c,feedback=true){if(busy||ended)return;c=Math.max(0,Math.min(COLS-1,c));if(c!==activeCol){activeCol=c;if(feedback)tick();moveActive()}}
+function showDialog(icon,title,html,alt,main,onAlt,onMain){paused=true;sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');$('dialogIcon').textContent=icon;$('dialogTitle').textContent=title;$('dialogText').innerHTML=html;$('sheetAlt').textContent=alt;$('sheetMain').textContent=main;$('sheetAlt').onclick=()=>{closeSheet();onAlt&&onAlt()};$('sheetMain').onclick=()=>{closeSheet();onMain&&onMain()};}
+function closeSheet(){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');paused=false;lastFrame=performance.now()}
+function showHelp(){showDialog('7÷','あそびかた',`<p>上から来る数字を、好きな列に落とそう。<br><strong>同じ約数</strong>で割れると、両方の数字が小さくなるよ。<br><strong>1</strong>になったブロックだけ消える。</p><div class="rule-example"><span class="rule-tile">7</span><span class="rule-arrow">＋</span><span class="rule-tile">14</span><span class="rule-arrow">→</span><span class="rule-tile">2</span></div><p>数字の下の小さな色点は、その数字を作る<strong>素因数</strong>。同じ色を探すのもヒント！</p><div class="prime-legend"><span class="legend-token"><i class="dot" style="--d:${colors[2]}"></i>2</span><span class="legend-token"><i class="dot" style="--d:${colors[3]}"></i>3</span><span class="legend-token"><i class="dot" style="--d:${colors[5]}"></i>5</span><span class="legend-token"><i class="dot" style="--d:${colors[7]}"></i>7</span></div><p>「じっくり」は時間制限なし。「自動落下」はブロックがゆっくり降りてくる。いっぱいになるまで何手続けられるかな？</p>`,'閉じる','遊んでみる');}
+function showGameOver(){showDialog('✦','また挑戦しよう',`<p><strong>${turns}手</strong> 生き残ったよ。<br>スコア <strong>${score}</strong> ／ ベスト <strong>${best}</strong><br>割り算が自然に見えてきたかな？</p>`,'盤面を見る','もう一回',null,reset);}
+function beginNew(){if(turns===0){reset();return}showDialog('↻','はじめから遊ぶ？',`<p>いまの盤面はリセットされるよ。<br>ベストスコアは残るから安心してね。</p>`,'つづける','やりなおす',null,reset)}
+function setAuto(on){auto=on;autoRow=0;lastFrame=performance.now();renderInfo();setCoach(auto?'数字がゆっくり落ちるよ。<strong>列をタップ</strong>するとすぐ落とせる。':'時間制限なし。ゆっくり考えて、好きな列をタップ。');}
+function animate(ts){if(!lastFrame)lastFrame=ts;const dt=Math.max(0,Math.min(.06,(ts-lastFrame)/1000));lastFrame=ts;if(auto&&!paused&&!busy&&!ended){autoRow+=(.72+Math.min(1.15,turns*.025))*dt;const maxRow=ROWS-1-cols[activeCol].length;if(autoRow>=maxRow){autoRow=Math.max(0,maxRow);dropAt(activeCol)}else moveActive()}requestAnimationFrame(animate)}
+const slots=$('slots');for(let i=0;i<ROWS*COLS;i++){const d=document.createElement('div');d.className='slot';slots.appendChild(d)}
+let pointerId=null,downX=0,downY=0,dragged=false;
+function getPointerCol(e){const r=board.getBoundingClientRect();return Math.max(0,Math.min(COLS-1,Math.floor((e.clientX-r.left)/r.width*COLS)))}
+board.addEventListener('pointerdown',e=>{if(busy||ended||sheet.classList.contains('open'))return;board.classList.add('is-aiming');pointerId=e.pointerId;dragged=false;downX=e.clientX;downY=e.clientY;setCol(getPointerCol(e));board.setPointerCapture(e.pointerId);});
+board.addEventListener('pointermove',e=>{if(pointerId!==e.pointerId)return;if(Math.abs(e.clientX-downX)>5||Math.abs(e.clientY-downY)>5)dragged=true;setCol(getPointerCol(e));});
+board.addEventListener('pointerup',e=>{if(pointerId!==e.pointerId)return;pointerId=null;board.classList.remove('is-aiming');if(dragged){clickSound(.27)}dropAt(activeCol);});
+board.addEventListener('pointercancel',()=>{pointerId=null;board.classList.remove('is-aiming')});
+$('leftBtn').addEventListener('click',()=>setCol(activeCol-1));$('rightBtn').addEventListener('click',()=>setCol(activeCol+1));$('dropBtn').addEventListener('click',()=>dropAt(activeCol));
+$('undoBtn').addEventListener('click',()=>{if(busy||!history.length)return;const s=history.pop();clickSound(.56);restore(s)});
+$('restartBtn').addEventListener('click',beginNew);$('modeBtn').addEventListener('click',()=>{clickSound(.48);setAuto(!auto)});
+$('helpBtn').addEventListener('click',showHelp);$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem('factor-drop-sound-v1',soundOn?'on':'off')}catch(e){}renderInfo();if(soundOn)clickSound(.55)});
+document.addEventListener('keydown',e=>{if(sheet.classList.contains('open')){if(e.key==='Escape')closeSheet();return}if(e.key==='ArrowLeft'){e.preventDefault();setCol(activeCol-1)}else if(e.key==='ArrowRight'){e.preventDefault();setCol(activeCol+1)}else if(e.key===' '||e.key==='ArrowDown'||e.key==='Enter'){e.preventDefault();dropAt(activeCol)}else if(e.key.toLowerCase()==='z'&&(e.ctrlKey||e.metaKey)){$('undoBtn').click()}});
+document.addEventListener('visibilitychange',()=>{paused=document.hidden||sheet.classList.contains('open');lastFrame=performance.now()});
+queue=seedQueue.slice();ensureQueue();renderBoard();renderInfo();requestAnimationFrame(animate);
+window.__factorDropTest={getState:()=>({cols:cols.map(a=>a.slice()),queue:queue.slice(),score,turns,activeCol,busy,ended,auto,autoRow}),gcd,dropAt,reset,setCol};
+})();
+</script>
+</body>
+</html>
